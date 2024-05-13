@@ -31,7 +31,7 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
     max = 100,
     onComplete = () => {},
     startAngle = 270,
-    variant = 'default',
+    variant = "default",
   } = props;
 
   let moveStartValue: number;
@@ -41,7 +41,7 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
   const prevValue = useRef(props.value > min ? props.value : min);
 
   const [value, setValue] = useState(
-    props?.value < min ? min : props?.value > max ? max : props?.value
+    props?.value < min ? min : props?.value > max ? max : props?.value,
   );
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
       prevValue.current,
       radianValue,
       max,
-      min
+      min,
     );
     startCartesian = polarToCartesian(
       moveStartRadian,
@@ -82,14 +82,14 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
       thumbRadius,
       thumbBorderWidth as number,
       startAngle,
-      variant
+      variant,
     );
     return true;
   };
 
   const handlePanResponderMove = (
     _e: GestureResponderEvent,
-    gestureState: PanResponderGestureState
+    gestureState: PanResponderGestureState,
   ) => {
     if (disabled) {
       return;
@@ -106,7 +106,7 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
       thumbRadius,
       thumbBorderWidth as number,
       startAngle,
-      variant
+      variant,
     );
 
     const ratio =
@@ -152,7 +152,7 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
       onPanResponderRelease: handlePanResponderEnd,
       onPanResponderTerminationRequest: () => false,
       onPanResponderTerminate: handlePanResponderEnd,
-    })
+    }),
   ).current;
 
   const currentRadian = getCurrentRadian(value, radianValue, max, min);
@@ -164,7 +164,7 @@ const useSliderAnimation = (props: RadialSliderAnimationHookProps) => {
     thumbRadius,
     thumbBorderWidth as number,
     startAngle,
-    variant
+    variant,
   );
 
   return {

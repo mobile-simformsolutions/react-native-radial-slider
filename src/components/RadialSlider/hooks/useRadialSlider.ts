@@ -16,7 +16,7 @@ const useRadialSlider = (props: RadialSliderHookProps) => {
     thumbBorderWidth = 5,
     min = 0,
     max = 200,
-    variant = 'default',
+    variant = "default",
     step = 1,
     startAngle = 270,
   } = props;
@@ -27,7 +27,7 @@ const useRadialSlider = (props: RadialSliderHookProps) => {
   const isRadialSliderVariant = variant === Constants.radialSlider;
 
   //For radial-circle-slider variant
-  const isRadialCircleVariant = variant === Constants.radialCircleSlider;
+  const isRadialCircleVariant = true;
 
   //For speedometer-marker variant
   const isMarkerVariant = variant === Constants.speedoMeterMarker;
@@ -35,17 +35,17 @@ const useRadialSlider = (props: RadialSliderHookProps) => {
   //For speedometer variant
   const isSpeedoMeterVariant = variant === Constants.speedometer;
 
-  const radianValue = isRadialCircleVariant ? 0.057 : openingRadian;
+  const radianValue = isRadialCircleVariant ? 1.5 : openingRadian;
 
   useEffect(() => {
     if (isMarkerVariant)
       if (min < 0) {
-        throw 'Negative number is not allowed';
+        throw "Negative number is not allowed";
       } else if (max < 0) {
-        throw 'Negative number is not allowed';
+        throw "Negative number is not allowed";
       }
     if (max < min) {
-      throw 'max value should be greater than min';
+      throw "max value should be greater than min";
     }
   }, [isMarkerVariant, max, min]);
 
@@ -75,7 +75,7 @@ const useRadialSlider = (props: RadialSliderHookProps) => {
     thumbRadius,
     thumbBorderWidth,
     startAngle,
-    variant
+    variant,
   );
 
   const endPoint = polarToCartesian(
@@ -85,7 +85,7 @@ const useRadialSlider = (props: RadialSliderHookProps) => {
     thumbRadius,
     thumbBorderWidth,
     startAngle,
-    variant
+    variant,
   );
 
   const marks = useMemo(() => {

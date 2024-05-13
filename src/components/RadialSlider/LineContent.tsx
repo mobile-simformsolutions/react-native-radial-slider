@@ -89,7 +89,7 @@ const LineContent = (props: LineContentProps) => {
         const adjustedSliderStartPoint =
           isRadialCircleVariant && props?.startAngle != null
             ? props.startAngle + sliderPointAdjustment
-            : 86;
+            : 89;
 
         const radialCircleLineRotation = isRadialCircleVariant
           ? adjustedSliderStartPoint
@@ -103,14 +103,15 @@ const LineContent = (props: LineContentProps) => {
               <G
                 transform={`translate(${
                   radius + (lineHeight - thumbBorderWidth)
-                }, ${radius + (lineHeight - thumbBorderWidth)})`}>
+                }, ${radius + (lineHeight - thumbBorderWidth)})`}
+              >
                 <Line
                   x1={
                     index === markIndex && !isHideMarkerLine
                       ? radius + markerLineSize
-                      : radius + lineHeight
+                      : radius + lineHeight - 12
                   }
-                  x2={radius + lineHeight / 2 + isSpeedoMarker}
+                  x2={radius - 10 + lineHeight / 2}
                   transform={`rotate(${
                     index + radialCircleLineRotation + angle
                   })`}
@@ -118,9 +119,9 @@ const LineContent = (props: LineContentProps) => {
                   stroke={
                     activeIndex > index ||
                     (index === markIndex && !isHideMarkerLine)
-                      ? Platform.OS === 'web'
+                      ? Platform.OS === "web"
                         ? linearGradient[0].color
-                        : 'url(#gradient)'
+                        : "url(#gradient)"
                       : lineColor
                   }
                   fill="none"

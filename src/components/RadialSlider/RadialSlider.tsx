@@ -17,10 +17,11 @@ import ButtonContent from './ButtonContent';
 import CenterContent from './CenterContent';
 import TailText from './TailText';
 import LineContent from './LineContent';
+import MarkerValueContent from './MarkerValueContent';
 
 const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
   const [isStart, setIsStart] = useState<boolean>(false);
-  const [iconPosition, setIconPosition] = useState<string>('');
+  const [iconPosition, setIconPosition] = useState<string>("");
 
   const {
     step,
@@ -72,10 +73,10 @@ const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
   });
 
   const handleValue = () => {
-    if (iconPosition === 'up' && max > value) {
-      isStart && onPressButtons('up');
-    } else if (iconPosition === 'down' && min < value) {
-      isStart && onPressButtons('down');
+    if (iconPosition === "up" && max > value) {
+      isStart && onPressButtons("up");
+    } else if (iconPosition === "down" && min < value) {
+      isStart && onPressButtons("down");
     }
   };
 
@@ -101,14 +102,14 @@ const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
   };
 
   const onPressButtons = (type: string) => {
-    if (type === 'up' && max > value) {
+    if (type === "up" && max > value) {
       setValue((prevState: number) => {
         const calculatedValue = prevState + step;
         const roundedValue = parseFloat(calculatedValue.toFixed(1));
 
         return roundedValue;
       });
-    } else if (type === 'down' && min < value) {
+    } else if (type === "down" && min < value) {
       setValue((prevState: number) => {
         const calculatedValue = prevState - step;
         const roundedValue = parseFloat(calculatedValue.toFixed(1));
@@ -125,21 +126,29 @@ const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
       : 4
     : 0;
 
-  const strokeLinecap = isRadialCircleVariant ? 'square' : 'round';
+  const strokeLinecap = "round";
 
+  const stabilizeThumbPosition = currentRadian < 3 ? 7 : -4;
   return (
     <View
       onLayout={onLayout}
       ref={containerRef as any}
       style={[styles.container, style, { width: svgSize, height: svgSize }]}
-      testID="slider-view">
+      testID="slider-view"
+    >
       <Svg
-        width={svgSize + markerLineSize / 2 - (Platform.OS === 'web' ? 20 : 0)}
+        width={svgSize + markerLineSize / 2}
         height={svgSize + markerLineSize / 2}
         viewBox={`-${markerLineSize / 2} -${markerLineSize / 2} ${
           svgSize + markerLineSize
         } ${svgSize + markerLineSize}`}
-        preserveAspectRatio="none">
+        preserveAspectRatio="none"
+      >
+        <MarkerValueContent
+          {...(props as object)}
+          value={value}
+          currentRadian={currentRadian}
+        />
         <Defs>
           <LinearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="gradient">
             {linearGradient.map(
@@ -148,15 +157,16 @@ const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
                   offset: NumberProp | undefined;
                   color: string | undefined;
                 },
-                index: React.Key | null | undefined
+                index: React.Key | null | undefined,
               ) => (
                 <Stop key={index} offset={item.offset} stopColor={item.color} />
-              )
+              ),
             )}
           </LinearGradient>
         </Defs>
-        {!isRadialCircleVariant && !isHideTailText && <TailText {...props} />}
-        {!isHideLines && <LineContent {...props} value={value} />}
+
+        {!isHideTailText && <TailText {...props} />}
+        <LineContent {...props} value={value} currentRadian={currentRadian} />
         {!isHideSlider && (
           <>
             <Path
@@ -165,24 +175,24 @@ const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
               fill="none"
               strokeLinecap={strokeLinecap}
               d={`M${startPoint.x},${startPoint.y} A ${radius},${radius},0,${
-                startRadian - radianValue >= Math.PI ? '1' : '0'
+                startRadian - radianValue >= Math.PI ? "1" : "0"
               },1,${endPoint.x},${endPoint.y}`}
             />
             <Path
-              strokeWidth={sliderWidth}
+              strokeWidth={sliderWidth + 4}
               stroke="url(#gradient)"
               fill="none"
               strokeLinecap={strokeLinecap}
               d={`M${startPoint.x},${startPoint.y} A ${radius},${radius},0,${
-                startRadian - currentRadian >= Math.PI ? '1' : '0'
+                startRadian - currentRadian >= Math.PI ? "1" : "0"
               },1,${curPoint.x},${curPoint.y}`}
             />
             <Circle
-              cx={curPoint.x + circleXPosition}
+              cx={curPoint.x + circleXPosition + stabilizeThumbPosition}
               cy={curPoint.y}
-              r={thumbRadius}
+              r={10}
               fill={thumbColor || thumbBorderColor}
-              stroke={thumbBorderColor}
+              stroke={thumbColor}
               strokeWidth={thumbBorderWidth}
               {...panResponder.panHandlers}
             />
@@ -192,37 +202,6 @@ const RadialSlider = (props: RadialSliderProps & typeof defaultProps) => {
       <View style={[styles.content, contentStyle]} pointerEvents="box-none">
         {/* Center Content */}
         {!isHideCenterContent && <CenterContent {...props} value={value} />}
-        {/* Button Content */}
-        {!isRadialCircleVariant && !isHideButtons && (
-          <View style={[styles.buttonsWrapper, buttonContainerStyle]}>
-            <View style={styles.center}>
-              <ButtonContent
-                onPress={() => onPressButtons('down')}
-                onLongPress={() => {
-                  setIsStart(true);
-                  setIconPosition('down');
-                }}
-                onPressOut={() => setIsStart(false)}
-                buttonType="left-btn"
-                style={leftButtonStyle}
-                disabled={disabled || min === value}
-                stroke={stroke ?? Colors.blue}
-              />
-              <ButtonContent
-                disabled={disabled || max === value}
-                onPress={() => onPressButtons('up')}
-                onLongPress={() => {
-                  setIsStart(true);
-                  setIconPosition('up');
-                }}
-                onPressOut={() => setIsStart(false)}
-                style={rightButtonStyle}
-                buttonType="right-btn"
-                stroke={stroke ?? Colors.blue}
-              />
-            </View>
-          </View>
-        )}
       </View>
     </View>
   );

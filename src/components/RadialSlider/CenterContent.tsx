@@ -32,15 +32,7 @@ const CenterContent = (props: CenterContentProps) => {
           <Text style={[styles.valueText, styles.large_header, valueStyle]}>
             {value}
           </Text>
-          <Text style={[styles.valueUnit, styles.helperText, unitStyle]}>
-            {unit}
-          </Text>
         </View>
-      )}
-      {!isHideSubtitle && (
-        <Text style={[styles.helperText, styles.subTitleWidth, subTitleStyle]}>
-          {subTitle}
-        </Text>
       )}
     </View>
   );
